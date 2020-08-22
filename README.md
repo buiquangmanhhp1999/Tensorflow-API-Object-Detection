@@ -18,8 +18,14 @@ First, run command line
 ```
 protoc object_detection/protos/*.proto --python_out=.
 ```
-Then, run
+Then, run above command to create tf train record and test record
 ```python
 # usage: create_tf_record.py [-h] [-x XML_DIR] [-l LABELS_PATH] [-o OUTPUT_PATH] [-i IMAGE_DIR] [-c CSV_PATH]
+
+# create train record
 python ./scripts/create_tf_record.py -x ./scripts/TrainValDataset/train/ -l ./scripts/label_map.pbxt -o ./scripts/TrainValDataset/train.record
+
+# create test record
+python ./scripts/create_tf_record.py -x ./scripts/TrainValDataset/test/ -l ./scripts/label_map.pbtxt -o ./scripts/TrainValDataset/test.record
+
 ```
