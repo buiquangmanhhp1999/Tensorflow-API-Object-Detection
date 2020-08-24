@@ -25,7 +25,7 @@ MASK_PREDICTIONS = box_predictor.MASK_PREDICTIONS
 
 
 class RfcnKerasBoxPredictor(box_predictor.KerasBoxPredictor):
-  """RFCN Box Predictor.
+    """RFCN Box Predictor.
 
   Applies a position sensitive ROI pooling on position sensitive feature maps to
   predict classes and refined locations. See https://arxiv.org/abs/1605.06409
@@ -36,17 +36,17 @@ class RfcnKerasBoxPredictor(box_predictor.KerasBoxPredictor):
   prediction is made for each class.
   """
 
-  def __init__(self,
-               is_training,
-               num_classes,
-               conv_hyperparams,
-               freeze_batchnorm,
-               num_spatial_bins,
-               depth,
-               crop_size,
-               box_code_size,
-               name=None):
-    """Constructor.
+    def __init__(self,
+                 is_training,
+                 num_classes,
+                 conv_hyperparams,
+                 freeze_batchnorm,
+                 num_spatial_bins,
+                 depth,
+                 crop_size,
+                 box_code_size,
+                 name=None):
+        """Constructor.
 
     Args:
       is_training: Indicates whether the BoxPredictor is in training mode.
@@ -68,73 +68,73 @@ class RfcnKerasBoxPredictor(box_predictor.KerasBoxPredictor):
       name: A string name scope to assign to the box predictor. If `None`, Keras
         will auto-generate one from the class name.
     """
-    super(RfcnKerasBoxPredictor, self).__init__(
-        is_training, num_classes, freeze_batchnorm=freeze_batchnorm,
-        inplace_batchnorm_update=False, name=name)
-    self._freeze_batchnorm = freeze_batchnorm
-    self._conv_hyperparams = conv_hyperparams
-    self._num_spatial_bins = num_spatial_bins
-    self._depth = depth
-    self._crop_size = crop_size
-    self._box_code_size = box_code_size
+        super(RfcnKerasBoxPredictor, self).__init__(
+            is_training, num_classes, freeze_batchnorm=freeze_batchnorm,
+            inplace_batchnorm_update=False, name=name)
+        self._freeze_batchnorm = freeze_batchnorm
+        self._conv_hyperparams = conv_hyperparams
+        self._num_spatial_bins = num_spatial_bins
+        self._depth = depth
+        self._crop_size = crop_size
+        self._box_code_size = box_code_size
 
-    # Build the shared layers used for both heads
-    self._shared_conv_layers = []
-    self._shared_conv_layers.append(
-        tf.keras.layers.Conv2D(
-            self._depth,
-            [1, 1],
-            padding='SAME',
-            name='reduce_depth_conv',
-            **self._conv_hyperparams.params()))
-    self._shared_conv_layers.append(
-        self._conv_hyperparams.build_batch_norm(
-            training=(self._is_training and not self._freeze_batchnorm),
-            name='reduce_depth_batchnorm'))
-    self._shared_conv_layers.append(
-        self._conv_hyperparams.build_activation_layer(
-            name='reduce_depth_activation'))
+        # Build the shared layers used for both heads
+        self._shared_conv_layers = []
+        self._shared_conv_layers.append(
+            tf.keras.layers.Conv2D(
+                self._depth,
+                [1, 1],
+                padding='SAME',
+                name='reduce_depth_conv',
+                **self._conv_hyperparams.params()))
+        self._shared_conv_layers.append(
+            self._conv_hyperparams.build_batch_norm(
+                training=(self._is_training and not self._freeze_batchnorm),
+                name='reduce_depth_batchnorm'))
+        self._shared_conv_layers.append(
+            self._conv_hyperparams.build_activation_layer(
+                name='reduce_depth_activation'))
 
-    self._box_encoder_layers = []
-    location_feature_map_depth = (self._num_spatial_bins[0] *
-                                  self._num_spatial_bins[1] *
-                                  self.num_classes *
-                                  self._box_code_size)
-    self._box_encoder_layers.append(
-        tf.keras.layers.Conv2D(
-            location_feature_map_depth,
-            [1, 1],
-            padding='SAME',
-            name='refined_locations_conv',
-            **self._conv_hyperparams.params()))
-    self._box_encoder_layers.append(
-        self._conv_hyperparams.build_batch_norm(
-            training=(self._is_training and not self._freeze_batchnorm),
-            name='refined_locations_batchnorm'))
+        self._box_encoder_layers = []
+        location_feature_map_depth = (self._num_spatial_bins[0] *
+                                      self._num_spatial_bins[1] *
+                                      self.num_classes *
+                                      self._box_code_size)
+        self._box_encoder_layers.append(
+            tf.keras.layers.Conv2D(
+                location_feature_map_depth,
+                [1, 1],
+                padding='SAME',
+                name='refined_locations_conv',
+                **self._conv_hyperparams.params()))
+        self._box_encoder_layers.append(
+            self._conv_hyperparams.build_batch_norm(
+                training=(self._is_training and not self._freeze_batchnorm),
+                name='refined_locations_batchnorm'))
 
-    self._class_predictor_layers = []
-    self._total_classes = self.num_classes + 1  # Account for background class.
-    class_feature_map_depth = (self._num_spatial_bins[0] *
-                               self._num_spatial_bins[1] *
-                               self._total_classes)
-    self._class_predictor_layers.append(
-        tf.keras.layers.Conv2D(
-            class_feature_map_depth,
-            [1, 1],
-            padding='SAME',
-            name='class_predictions_conv',
-            **self._conv_hyperparams.params()))
-    self._class_predictor_layers.append(
-        self._conv_hyperparams.build_batch_norm(
-            training=(self._is_training and not self._freeze_batchnorm),
-            name='class_predictions_batchnorm'))
+        self._class_predictor_layers = []
+        self._total_classes = self.num_classes + 1  # Account for background class.
+        class_feature_map_depth = (self._num_spatial_bins[0] *
+                                   self._num_spatial_bins[1] *
+                                   self._total_classes)
+        self._class_predictor_layers.append(
+            tf.keras.layers.Conv2D(
+                class_feature_map_depth,
+                [1, 1],
+                padding='SAME',
+                name='class_predictions_conv',
+                **self._conv_hyperparams.params()))
+        self._class_predictor_layers.append(
+            self._conv_hyperparams.build_batch_norm(
+                training=(self._is_training and not self._freeze_batchnorm),
+                name='class_predictions_batchnorm'))
 
-  @property
-  def num_classes(self):
-    return self._num_classes
+    @property
+    def num_classes(self):
+        return self._num_classes
 
-  def _predict(self, image_features, proposal_boxes, **kwargs):
-    """Computes encoded object locations and corresponding confidences.
+    def _predict(self, image_features, proposal_boxes, **kwargs):
+        """Computes encoded object locations and corresponding confidences.
 
     Args:
       image_features: A list of float tensors of shape [batch_size, height_i,
@@ -157,48 +157,48 @@ class RfcnKerasBoxPredictor(box_predictor.KerasBoxPredictor):
       ValueError: if num_predictions_per_location is not 1 or if
         len(image_features) is not 1.
     """
-    if len(image_features) != 1:
-      raise ValueError('length of `image_features` must be 1. Found {}'.
-                       format(len(image_features)))
-    image_feature = image_features[0]
-    batch_size = tf.shape(proposal_boxes)[0]
-    num_boxes = tf.shape(proposal_boxes)[1]
-    net = image_feature
-    for layer in self._shared_conv_layers:
-      net = layer(net)
+        if len(image_features) != 1:
+            raise ValueError('length of `image_features` must be 1. Found {}'.
+                             format(len(image_features)))
+        image_feature = image_features[0]
+        batch_size = tf.shape(proposal_boxes)[0]
+        num_boxes = tf.shape(proposal_boxes)[1]
+        net = image_feature
+        for layer in self._shared_conv_layers:
+            net = layer(net)
 
-    # Location predictions.
-    box_net = net
-    for layer in self._box_encoder_layers:
-      box_net = layer(box_net)
-    box_encodings = ops.batch_position_sensitive_crop_regions(
-        box_net,
-        boxes=proposal_boxes,
-        crop_size=self._crop_size,
-        num_spatial_bins=self._num_spatial_bins,
-        global_pool=True)
-    box_encodings = tf.squeeze(box_encodings, axis=[2, 3])
-    box_encodings = tf.reshape(box_encodings,
-                               [batch_size * num_boxes, 1, self.num_classes,
-                                self._box_code_size])
-
-    # Class predictions.
-    class_net = net
-    for layer in self._class_predictor_layers:
-      class_net = layer(class_net)
-    class_predictions_with_background = (
-        ops.batch_position_sensitive_crop_regions(
-            class_net,
+        # Location predictions.
+        box_net = net
+        for layer in self._box_encoder_layers:
+            box_net = layer(box_net)
+        box_encodings = ops.batch_position_sensitive_crop_regions(
+            box_net,
             boxes=proposal_boxes,
             crop_size=self._crop_size,
             num_spatial_bins=self._num_spatial_bins,
-            global_pool=True))
-    class_predictions_with_background = tf.squeeze(
-        class_predictions_with_background, axis=[2, 3])
-    class_predictions_with_background = tf.reshape(
-        class_predictions_with_background,
-        [batch_size * num_boxes, 1, self._total_classes])
+            global_pool=True)
+        box_encodings = tf.squeeze(box_encodings, axis=[2, 3])
+        box_encodings = tf.reshape(box_encodings,
+                                   [batch_size * num_boxes, 1, self.num_classes,
+                                    self._box_code_size])
 
-    return {BOX_ENCODINGS: [box_encodings],
-            CLASS_PREDICTIONS_WITH_BACKGROUND:
-            [class_predictions_with_background]}
+        # Class predictions.
+        class_net = net
+        for layer in self._class_predictor_layers:
+            class_net = layer(class_net)
+        class_predictions_with_background = (
+            ops.batch_position_sensitive_crop_regions(
+                class_net,
+                boxes=proposal_boxes,
+                crop_size=self._crop_size,
+                num_spatial_bins=self._num_spatial_bins,
+                global_pool=True))
+        class_predictions_with_background = tf.squeeze(
+            class_predictions_with_background, axis=[2, 3])
+        class_predictions_with_background = tf.reshape(
+            class_predictions_with_background,
+            [batch_size * num_boxes, 1, self._total_classes])
+
+        return {BOX_ENCODINGS: [box_encodings],
+                CLASS_PREDICTIONS_WITH_BACKGROUND:
+                    [class_predictions_with_background]}

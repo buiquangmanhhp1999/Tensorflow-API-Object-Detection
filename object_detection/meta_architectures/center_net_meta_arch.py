@@ -1220,7 +1220,7 @@ class ObjectDetectionParams(
     """Constructor with default values for ObjectDetectionParams.
 
     Args:
-      localization_loss: a object_detection.core.losses.Loss object to compute
+      localization_loss: a core.losses.Loss object to compute
         the loss for the center offset and height/width predictions in
         CenterNet.
       scale_loss_weight: float, The weight for localizing box size. Note that
@@ -1295,9 +1295,9 @@ class KeypointEstimationParams(
         keypoints to be considered in this task. This is used to retrieve the
         subset of the keypoints from gt_keypoints that should be considered in
         this task.
-      classification_loss: an object_detection.core.losses.Loss object to
+      classification_loss: an core.losses.Loss object to
         compute the loss for the class predictions in CenterNet.
-      localization_loss: an object_detection.core.losses.Loss object to compute
+      localization_loss: an core.losses.Loss object to compute
         the loss for the center offset and height/width predictions in
         CenterNet.
       keypoint_labels: A list of strings representing the label text of each
@@ -1378,7 +1378,7 @@ class ObjectCenterParams(
     """Constructor with default values for ObjectCenterParams.
 
     Args:
-      classification_loss: an object_detection.core.losses.Loss object to
+      classification_loss: an core.losses.Loss object to
         compute the loss for the class predictions in CenterNet.
       object_center_loss_weight: float, The weight for the object center loss.
       heatmap_bias_init: float, the initial value of bias in the convolutional
@@ -1419,7 +1419,7 @@ class MaskParams(
     """Constructor with default values for MaskParams.
 
     Args:
-      classification_loss: an object_detection.core.losses.Loss object to
+      classification_loss: an core.losses.Loss object to
         compute the loss for the semantic segmentation predictions in CenterNet.
       task_loss_weight: float, The loss weight for the segmentation task.
       mask_height: The height of the resized instance segmentation mask.
@@ -1468,9 +1468,9 @@ class DensePoseParams(
         This should typically correspond to the "person" class. Note that the ID
         is 0-based, meaning that class 0 corresponds to the first non-background
         object class.
-      classification_loss: an object_detection.core.losses.Loss object to
+      classification_loss: an core.losses.Loss object to
         compute the loss for the body part predictions in CenterNet.
-      localization_loss: an object_detection.core.losses.Loss object to compute
+      localization_loss: an core.losses.Loss object to compute
         the loss for the surface coordinate regression in CenterNet.
       part_loss_weight: The loss weight to apply to part prediction.
       coordinate_loss_weight: The loss weight to apply to surface coordinate
@@ -1521,7 +1521,7 @@ class TrackParams(
       reid_embed_size: int. The embedding size for ReID task.
       num_fc_layers: int. The number of (fully-connected, batch-norm, relu)
         layers for track ID classification head.
-      classification_loss: an object_detection.core.losses.Loss object to
+      classification_loss: an core.losses.Loss object to
         compute the loss for the ReID embedding in CenterNet.
       task_loss_weight: float, the loss weight for the tracking task.
 
@@ -2002,7 +2002,7 @@ class CenterNetMetaArch(model.DetectionModel):
       heatmap_predictions: A list of float tensors of shape [batch_size,
         out_height, out_width, num_keypoints] representing the prediction heads
         of the model for keypoint heatmap.
-      classification_loss_fn: An object_detection.core.losses.Loss object to
+      classification_loss_fn: An core.losses.Loss object to
         compute the loss for the class predictions in CenterNet.
       per_pixel_weights: A float tensor of shape [batch_size,
         out_height * out_width, 1] with 1s in locations where the spatial
@@ -2061,7 +2061,7 @@ class CenterNetMetaArch(model.DetectionModel):
       offset_predictions: A list of float tensors of shape [batch_size,
         out_height, out_width, 2] representing the prediction heads of the model
         for keypoint offset.
-      localization_loss_fn: An object_detection.core.losses.Loss object to
+      localization_loss_fn: An core.losses.Loss object to
         compute the loss for the keypoint offset predictions in CenterNet.
 
     Returns:
@@ -2115,7 +2115,7 @@ class CenterNetMetaArch(model.DetectionModel):
       regression_predictions: A list of float tensors of shape [batch_size,
         out_height, out_width, 2 * num_keypoints] representing the prediction
         heads of the model for keypoint regression offset.
-      localization_loss_fn: An object_detection.core.losses.Loss object to
+      localization_loss_fn: An core.losses.Loss object to
         compute the loss for the keypoint regression offset predictions in
         CenterNet.
 

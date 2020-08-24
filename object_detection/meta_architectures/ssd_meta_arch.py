@@ -319,8 +319,8 @@ class SSDMetaArch(model.DetectionModel):
       score_conversion_fn: callable elementwise nonlinearity (that takes tensors
         as inputs and returns tensors).  This is usually used to convert logits
         to probabilities.
-      classification_loss: an object_detection.core.losses.Loss object.
-      localization_loss: a object_detection.core.losses.Loss object.
+      classification_loss: an core.losses.Loss object.
+      localization_loss: a core.losses.Loss object.
       classification_loss_weight: float
       localization_loss_weight: float
       normalize_loss_by_num_matches: boolean

@@ -75,9 +75,9 @@ class TargetAssigner(object):
 
     Args:
       similarity_calc: a RegionSimilarityCalculator
-      matcher: an object_detection.core.Matcher used to match groundtruth to
+      matcher: an core.Matcher used to match groundtruth to
         anchors.
-      box_coder_instance: an object_detection.core.BoxCoder used to encode
+      box_coder_instance: an core.BoxCoder used to encode
         matching groundtruth boxes with respect to anchors.
       negative_class_weight: classification weight to be associated to negative
         anchors (default: 1.0). The weight must be in [0., 1.].

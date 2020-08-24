@@ -26,19 +26,19 @@ import tensorflow.compat.v1 as tf
 import tensorflow.compat.v2 as tf2
 import tf_slim as slim
 
-from object_detection import eval_util
-from object_detection import exporter as exporter_lib
-from object_detection import inputs
-from object_detection.builders import graph_rewriter_builder
-from object_detection.builders import model_builder
-from object_detection.builders import optimizer_builder
-from object_detection.core import standard_fields as fields
-from object_detection.utils import config_util
-from object_detection.utils import label_map_util
-from object_detection.utils import ops
-from object_detection.utils import shape_utils
-from object_detection.utils import variables_helper
-from object_detection.utils import visualization_utils as vis_utils
+import eval_util
+import exporter as exporter_lib
+import inputs
+from builders import graph_rewriter_builder
+from builders import model_builder
+from builders import optimizer_builder
+from core import standard_fields as fields
+from utils import config_util
+from utils import label_map_util
+from utils import ops
+from utils import shape_utils
+from utils import variables_helper
+from utils import visualization_utils as vis_utils
 
 # pylint: disable=g-import-not-at-top
 try:
