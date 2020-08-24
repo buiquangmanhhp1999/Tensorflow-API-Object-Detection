@@ -5,7 +5,7 @@ import numpy as np
 import time
 
 
-class Detector(object):
+class DetectorFaster(object):
     def __init__(self, path_to_model, path_to_labels):
         self.path_to_model = path_to_model
         self.path_to_labels = path_to_labels
