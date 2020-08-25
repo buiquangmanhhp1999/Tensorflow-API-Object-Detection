@@ -5,6 +5,9 @@ Tensorflow API SSD MobileNet V2 Object Detection
 ```
 pip install -r requirement.txt
 pip install -U cython
+git clone https://github.com/cocodataset/cocoapi.git
+cd cocoapi/PythonAPI
+make
 pip install "git+https://github.com/philferriere/cocoapi.git#egg=pycocotools&subdirectory=PythonAPI"
 ```
 
