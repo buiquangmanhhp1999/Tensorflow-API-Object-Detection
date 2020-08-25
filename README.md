@@ -41,3 +41,7 @@ Run above command to train model
 ```
 python ./object_detection/model_main_tf2.py --model_dir=./ssd_mobilenet_v2/ --pipeline_config_path=./ssd_mobilenet_v2/pipeline.config 
 ```
+### 6. Export the trained model
+```
+ python ./object_detection/exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./ssd_mobilenet_v2/pipeline.config --trained_checkpoint_dir ./ssd_mobilenet_v2/ckpt/ --output_directory ./ssd_mobilenet_v2/exported_model/
+ ```
