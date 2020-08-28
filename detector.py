@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import time
 import cv2
 from object_detection.utils import label_map_util
 from object_detection.utils import config_util
@@ -27,8 +26,6 @@ class Detector(object):
         return detections
 
     def load_model(self):
-        print('Loading model... ')
-        start_time = time.time()
         # Load pipeline config and build a detection model
         configs = config_util.get_configs_from_pipeline_file(self.path_config)
         model_config = configs['model']
@@ -38,13 +35,11 @@ class Detector(object):
         ckpt = tf.compat.v2.train.Checkpoint(model=detection_model)
         ckpt.restore(self.path_ckpt).expect_partial()
 
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        print('Done! Took {} seconds'.format(elapsed_time))
-
         return detection_model
 
     def predict(self, image):
+        original_img = np.copy(image)
+
         image = np.asarray(image)
 
         input_tensor = tf.convert_to_tensor(np.expand_dims(image, 0), dtype=tf.float32)
@@ -66,13 +61,17 @@ class Detector(object):
         self.detection_boxes = detections['detection_boxes']
 
         # draw bounding boxes and labels
-        image = self.draw(image)
-        return image
+        image, coordinate_dict = self.draw(image)
+
+        return image, original_img, coordinate_dict
 
     def draw(self, img):
+        coordinate_dict = dict()
         height, width, _ = img.shape
+        li = []
+
         for i, score in enumerate(self.detection_scores):
-            if score < 0.5:
+            if score < 0.3:
                 continue
 
             self.detection_classes[i] += 1
@@ -84,7 +83,25 @@ class Detector(object):
             ymin, xmin, ymax, xmax = self.detection_boxes[i]
             real_xmin, real_ymin, real_xmax, real_ymax = int(xmin * width), int(ymin * height), int(xmax * width), int(
                 ymax * height)
+
+            curr = real_xmax * real_ymax - real_ymin * real_xmin
+            status = check_overlap(curr, li)
+            if status == 1:
+                continue
+
+            li.append(real_xmax * real_ymax - real_ymin * real_xmin)
+            # check overlap bounding boxes
+
             cv2.rectangle(img, (real_xmin, real_ymin), (real_xmax, real_ymax), (0, 255, 0), 2)
             cv2.putText(img, label, (real_xmin, real_ymin), cv2.FONT_HERSHEY_SIMPLEX, color=(0, 0, 255), fontScale=0.5)
+            coordinate_dict[label] = (real_xmin, real_xmin, real_xmax, real_ymax)
 
-        return img
+        return img, coordinate_dict
+
+
+def check_overlap(curr, li):
+    for va in li:
+        # overlap
+        if abs(va - curr) < 1000:
+            return 1
+    return 0
